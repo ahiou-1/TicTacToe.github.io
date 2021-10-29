@@ -1,0 +1,25 @@
+.game-section {
+    width: 600px;
+    height: 600px;
+    display: flex;
+    flex-direction: column;
+    
+}
+
+.hor-1, .hor-2, .hor-3 {
+    display: flex;
+    height: 33%;
+}
+
+#inner-div {
+    width: 33%;
+    background-color: rgb(255, 255, 255);
+    border: 1px solid rgb(243, 243, 243);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#inner-div:hover {
+    background-color: wheat;
+}
