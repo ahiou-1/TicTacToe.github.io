@@ -12,6 +12,7 @@ body {
     display: flex;
     flex-direction: column;
     position: relative;
+    margin-bottom: 100px;
 }
 
 .hor-1, .hor-2, .hor-3 {
@@ -63,6 +64,7 @@ body {
 }
 
 .playBtn, .resetBtn {
+    background-color: #efefef;
     border: 1px solid black;
     border-radius: 3px;
     font-family: 'Fira Mono', monospace;
@@ -75,7 +77,7 @@ body {
     position: absolute;
     bottom: 50px;
     left: 50%;
-    margin-left: -50px;
+    margin-left: -60px;
     font-family: 'Fira Mono', monospace;
     font-size: 48px;
     font-weight: 600;
