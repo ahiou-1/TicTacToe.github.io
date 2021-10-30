@@ -61,6 +61,10 @@ let cross2 = 0;
 
 
 function checkHorizontal() {
+    hor1 = 0;
+    hor2 = 0;
+    hor3 = 0;
+
     for (let i = 0; i < 3; i++) {
         for(let j = 0; j < 3; j++) {
             if(i === 0) {
@@ -77,6 +81,10 @@ function checkHorizontal() {
 }
 
 function checkVertical() {
+    ver1 = 0;
+    ver2 = 0;
+    ver3 = 0;
+
     for(let i = 0; i < 3; i++) {
         for(let j = 0; j < 3; j++) {
             if(i === 0) {
@@ -85,7 +93,7 @@ function checkVertical() {
             if(i === 1) {
                 ver2 += table[j][1]
             }
-            if(i === 0) {
+            if(i === 2) {
                 ver3 += table[j][2]
             }
         }
@@ -93,6 +101,9 @@ function checkVertical() {
 }
 
 function checkCross() {
+    cross1 = 0;
+    cross2 = 0;
+
     for(let i = 0; i < 2; i++) {
         for(let j = 0; j < 3; j++) {
             if(i === 0) {
@@ -113,6 +124,31 @@ function onClick(event) {
     switchTurn(className);
     checkWinner()
     console.table(table)
+}
+
+// let horizontalArr = [hor1, hor2, hor3];
+// let verticalArr = [ver1, ver2, ver3];
+// let crossArr = [cross1, cross2];
+function checkWinner() {
+    checkHorizontal();
+    checkVertical();
+    checkCross();
+    // Array 들을 어디에 둬야 하는지 모르겠다.
+    let horizontalArr = [hor1, hor2, hor3];
+    let verticalArr = [ver1, ver2, ver3];
+    let crossArr = [cross1, cross2];
+    console.log(horizontalArr);
+    console.log(verticalArr);
+    console.log(crossArr);
+
+    if(horizontalArr.some(score => score === 3 || score === 30)) {
+        showWinner();
+    } else if(verticalArr.some(score => score === 3 || score === 30)) {
+        showWinner();
+    } else if(crossArr.some(score => score === 3 || score === 30)) {
+        showWinner();
+    }
+    decideDraw();
 }
 
 function switchTurn(className) {
@@ -181,22 +217,36 @@ function switchTurn(className) {
     }
 }
 
-// let horizontalArr = [hor1, hor2, hor3];
-// let verticalArr = [ver1, ver2, ver3];
-// let crossArr = [cross1, cross2];
-function checkWinner() {
-    checkHorizontal();
-    checkVertical();
-    checkCross();
-    // Array 들을 어디에 둬야 하는지 모르겠다.
-    let horizontalArr = [hor1, hor2, hor3];
-    let verticalArr = [ver1, ver2, ver3];
-    let crossArr = [cross1, cross2];
-
-   
-    
+//=====게임 끝내는 로직=====//
+let draw = 0;
+function showWinner() {
+    const result = document.createElement('p')
+    result.textContent = 'win!'
+    gameSection.appendChild(result)
 }
+
+function showDraw() {
+    const result = document.createElement('p')
+    result.textContent = 'draw!'
+    gameSection.appendChild(result)
+}
+
+function decideDraw() {
+    for(let i = 0; i < table.length; i++){
+        if(table[i].every(item => item != null)) {
+            draw += 1;//첫째줄 클릭해도 2,3줄이 비엇으니 +2됨.
+        } 
+    }
+    console.log('draw : ', draw)
+    if(draw === 3) {
+        showDraw();
+    }
+}
+
+
 
 for(let i = 0; i < innerDiv.length; i++) {
     innerDiv[i].addEventListener('click', onClick)
 }
+
+// 1. 클릭한 곳 다시 못 클릭하도록 해야 함.
