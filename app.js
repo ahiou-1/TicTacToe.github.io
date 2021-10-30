@@ -298,8 +298,10 @@ function resetGame() {
             innerDiv[i].innerHTML = '';
             innerDiv[i].removeEventListener('click', onClick)
         }
-        const result = document.querySelector('.result');
-        result.remove();
+        if(document.querySelector('.result')) {
+            const result = document.querySelector('.result');
+            result.remove();
+        }
     }
 
     playBtn.style.visibility = 'visible';
