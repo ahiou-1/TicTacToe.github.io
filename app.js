@@ -45,8 +45,6 @@ for(let i = 0; i < 3; i++) {
     }
 }
 
-console.table(table)
-
 //=====게임 승리 체크 로직=====//
 let hor1 = 0;
 let hor2 = 0;
@@ -121,34 +119,11 @@ let myTurn = true;
 
 function onClick(event) {
     const className = event.target.className;
+
     switchTurn(className);
-    checkWinner()
-    console.table(table)
-}
-
-// let horizontalArr = [hor1, hor2, hor3];
-// let verticalArr = [ver1, ver2, ver3];
-// let crossArr = [cross1, cross2];
-function checkWinner() {
-    checkHorizontal();
-    checkVertical();
-    checkCross();
-    // Array 들을 어디에 둬야 하는지 모르겠다.
-    let horizontalArr = [hor1, hor2, hor3];
-    let verticalArr = [ver1, ver2, ver3];
-    let crossArr = [cross1, cross2];
-    console.log(horizontalArr);
-    console.log(verticalArr);
-    console.log(crossArr);
-
-    if(horizontalArr.some(score => score === 3 || score === 30)) {
-        showWinner();
-    } else if(verticalArr.some(score => score === 3 || score === 30)) {
-        showWinner();
-    } else if(crossArr.some(score => score === 3 || score === 30)) {
-        showWinner();
-    }
-    decideDraw();
+    checkWinner();
+    paintOX(className);
+    event.target.removeEventListener('click', onClick);
 }
 
 function switchTurn(className) {
@@ -217,36 +192,116 @@ function switchTurn(className) {
     }
 }
 
+function checkWinner() {
+    checkHorizontal();
+    checkVertical();
+    checkCross();
+
+    let horizontalArr = [hor1, hor2, hor3];
+    let verticalArr = [ver1, ver2, ver3];
+    let crossArr = [cross1, cross2];
+
+    if(horizontalArr.some(score => score === 3 || score === 30)) {
+        showWinner();
+        for(let i = 0; i < innerDiv.length; i++) {
+            innerDiv[i].removeEventListener('click', onClick)
+        }
+    } else if(verticalArr.some(score => score === 3 || score === 30)) {
+        showWinner();
+        for(let i = 0; i < innerDiv.length; i++) {
+            innerDiv[i].removeEventListener('click', onClick)
+        }
+    } else if(crossArr.some(score => score === 3 || score === 30)) {
+        showWinner();
+        for(let i = 0; i < innerDiv.length; i++) {
+            innerDiv[i].removeEventListener('click', onClick)
+        }
+    } else {
+        decideDraw();
+    }
+}
+
+function paintOX(className) {
+    const selectedTile = document.querySelector(`.${className}`);
+    const span = document.createElement('span');
+    span.setAttribute('class', 'material-icons md-48');
+    
+    if(myTurn) { // X
+        span.textContent = 'close';
+        selectedTile.appendChild(span);
+        
+    } else if(!myTurn) { // O
+        span.textContent = 'circle';
+        selectedTile.appendChild(span);
+    }
+}
+
 //=====게임 끝내는 로직=====//
 let draw = 0;
 function showWinner() {
     const result = document.createElement('p')
+    result.setAttribute('class', 'result');
     result.textContent = 'win!'
     gameSection.appendChild(result)
 }
 
 function showDraw() {
     const result = document.createElement('p')
+    result.setAttribute('class', 'result');
     result.textContent = 'draw!'
     gameSection.appendChild(result)
 }
 
 function decideDraw() {
-    for(let i = 0; i < table.length; i++){
-        if(table[i].every(item => item != null)) {
-            draw += 1;//첫째줄 클릭해도 2,3줄이 비엇으니 +2됨.
-        } 
+    let mergeTable = [...table[0], ...table[1], ...table[2]];
+
+    for(let i = 0; i < mergeTable.length; i++){
+        if(mergeTable.every(score => score != null)){
+            draw += 1;
+        }
     }
-    console.log('draw : ', draw)
-    if(draw === 3) {
+
+    if(draw === 9) {
         showDraw();
     }
 }
 
+//=====게임을 켜고 끄는 로직=====//
+const playBtn = document.querySelector('.playBtn');
+const resetBtn = document.querySelector('.resetBtn');
 
+let started = false;
 
-for(let i = 0; i < innerDiv.length; i++) {
-    innerDiv[i].addEventListener('click', onClick)
+playBtn.addEventListener('click', playGame)
+resetBtn.addEventListener('click', resetGame)
+
+function playGame() {
+    started = true;
+    
+    for(let i = 0; i < innerDiv.length; i++) {
+        innerDiv[i].addEventListener('click', onClick)
+    }
+
+    playBtn.style.visibility = 'hidden';
+    resetBtn.style.visibility = 'visible';
 }
 
-// 1. 클릭한 곳 다시 못 클릭하도록 해야 함.
+function resetGame() {
+    draw = 0;
+    if(started) {
+        for(let i = 0; i < 3; i++) {
+            for(let j = 0; j < 3; j++) {
+                table[i][j] = null
+            }
+        }
+        for(let i = 0; i < innerDiv.length; i++) {
+            innerDiv[i].innerHTML = '';
+            innerDiv[i].removeEventListener('click', onClick)
+        }
+        const result = document.querySelector('.result');
+        result.remove();
+    }
+
+    playBtn.style.visibility = 'visible';
+    resetBtn.style.visibility = 'hidden';
+}
