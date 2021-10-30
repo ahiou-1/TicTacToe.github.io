@@ -83,3 +83,11 @@ body {
     color: black;
     text-shadow: 2px 2px blue;
 }
+
+/* 모바일 화면 */
+@media screen and (max-width: 768px) {
+    .game-section {
+        width: 420px;
+        height: 420px;
+    }
+}
